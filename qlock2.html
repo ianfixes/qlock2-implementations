@@ -1,0 +1,135 @@
+<html>
+<head>
+<!--
+###########################################################################
+#    Copyright (C) 2009 by Ian Katz <ijk5@mit.edu> 
+#
+#    qlocktwo - ian's clone of Biegert & Funk's Qlocktwo in  TEXTMODE :)
+#
+#    Released under the WTFPL:
+#
+#
+#               DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+#                       Version 2, December 2004
+#    
+#    Copyright (C) 2004 Sam Hocevar
+#     14 rue de Plaisance, 75014 Paris, France
+#    Everyone is permitted to copy and distribute verbatim or modified
+#    copies of this license document, and changing it is allowed as long
+#    as the name is changed.
+#    
+#               DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+#      TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
+#    
+#     0. You just DO WHAT THE FUCK YOU WANT TO.
+#    
+###########################################################################
+-->
+ <title>QlockTwo</title>
+
+<script type="text/javascript">
+<!--
+
+function r(lo, hi) {return function (x) {return lo <= x && x < hi;};}
+function mr(rs) {return function(x) {return rs.some(function(e, i, a){return e(x);});};}
+function in_m(filt_func) {return function(t) {return filt_func(t.getMinutes());};}
+function a(v) {return function(t) {return v;};}
+
+function in_h(hr)
+{
+    var hr = hr % 12;
+    return function(t) 
+        {
+            var h = t.getHours() % 12;
+            var m = t.getMinutes();
+            var ph = (h + 1) % 12;
+            return h == hr && r(0, 40)(m) || ph == hr && r(40, 60)(m);
+        };
+}
+
+
+function mt(id, trig)
+{
+    var o = new Object();
+    o.id = id;
+    o.trig = trig;
+    return o;
+}
+
+q = [];
+
+q.push(mt("w_its", a(true)));
+q.push(mt("w_y",   a(false)));
+q.push(mt("w_g",   a(false)));
+q.push(mt("w_x",   a(false)));
+q.push(mt("w_wq",  a(false)));
+q.push(mt("w_xi",  a(false)));
+q.push(mt("w_u",   a(false)));
+q.push(mt("w_lf",  a(false)));
+q.push(mt("w_of",  in_m(r(40, 60))));
+
+q.push(mt("h_1",  in_h(1)));
+q.push(mt("h_2",  in_h(2)));
+q.push(mt("h_3",  in_h(3)));
+q.push(mt("h_4",  in_h(4)));
+q.push(mt("h_5",  in_h(5)));
+q.push(mt("h_6",  in_h(6)));
+q.push(mt("h_7",  in_h(7)));
+q.push(mt("h_8",  in_h(8)));
+q.push(mt("h_9",  in_h(9)));
+q.push(mt("h_10", in_h(10)));
+q.push(mt("h_11", in_h(11)));
+q.push(mt("h_12", in_h(0)));
+
+q.push(mt("m_0",    in_m(r(0, 5))));
+q.push(mt("m_5",    in_m(mr([r(5, 10), r(25, 30), r(55, 60)]))));
+q.push(mt("m_10",   in_m(mr([r(10, 15), r(50, 55)]))));
+q.push(mt("m_15",   in_m(mr([r(15, 20), r(45, 50)]))));
+q.push(mt("m_20",   in_m(mr([r(20, 30), r(40, 45)]))));
+q.push(mt("m_30",   in_m(r(30, 35))));
+q.push(mt("m_35",   in_m(r(35, 40))));
+q.push(mt("m_past", in_m(r(5, 40))));
+
+function updateQlock()
+{
+    var ct = new Date ();
+    document.getElementById("qlock").style.fontSize = (window.innerWidth / 28.0) + "px";
+ 
+    for (var i = 0; i < q.length; i++)
+    {
+        var e = document.getElementById(q[i].id);
+	var tr = q[i].trig(ct);
+        e.style.color =      tr ? "white" : "black";
+        e.style.fontWeight = tr ? "bold"  : "normal";
+    }
+}
+
+// -->
+</script>
+
+<style type="text/css">
+
+#qlock {background-color:red; font-family:monospace;font-size:30px;padding:3em 4em;}
+#qlock .qrow {letter-spacing:1.2em; line-height:1.7em; text-transform:uppercase;}
+
+</style>
+
+
+</head>
+<body onload="updateQlock(); setInterval('updateQlock()', 1000)">
+ 
+<span id="clock">&nbsp;</span>
+<div id="qlock" style="text-align:center;">
+ <div class="qrow"><span id="w_its">its</span><span id="w_y">y</span><span id="m_15">quarter</span></div>
+ <div class="qrow"><span id="m_20">twenty</span><span id="m_5">five</span><span id="w_g">g</span></div>
+ <div class="qrow"><span id="m_35">thirtyfive</span><span id="w_x">x</span></div>
+ <div class="qrow"><span id="m_30">half</span><span id="m_10">ten</span><span id="w_wq">wq</span><span id="w_of">of</span></div>
+ <div class="qrow"><span id="m_past">past</span><span id="w_xi">xi</span><span id="h_7">seven</span></div>
+ <div class="qrow"><span id="h_1">one</span><span id="h_2">two</span><span id="h_3">three</span></div>
+ <div class="qrow"><span id="h_4">four</span><span id="h_5">five</span><span id="h_6">six</span></div>
+ <div class="qrow"><span id="h_8">eight</span><span id="h_11">eleven</span></div>
+ <div class="qrow"><span id="h_9">nine</span><span id="w_u">u</span><span id="h_12">twelve</span></div>
+ <div class="qrow"><span id="h_10">ten</span><span id="w_lf">lf</span><span id="m_0">oclock</span></div>
+</div>
+</body>
+</html>
